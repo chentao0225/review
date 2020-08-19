@@ -67,7 +67,7 @@ console.log(Math.min(1,3,5,7,98,6))//=>1
 console.log(Math.max([1,3,5,7,98,6]))//=>NaN 此处是只传一个值，是一个数组,和内置的语法要求不同
 ```
 
-5.Math.sqrt / pow([number value])
+5.Math.sqrt([number value])/ pow([number value,...])
 
 > sqrt：给一个数开平发
 > pow:计算一个数的多少次幂
