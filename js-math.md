@@ -90,10 +90,10 @@ console.log(Math.random())
 
 > 包含 n 也包含 m
 > n<m
-> Math.random(Math.random()\*(m-n)+n)
+> Math.round(Math.random()\*(m-n)+n)
 
 ```
 //获取1-10之间的随机整数
-Math.random(Math.random()*(10-1)+1)
+Math.round(Math.random()*(10-1)+1)
 
 ```

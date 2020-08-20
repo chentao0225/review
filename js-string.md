@@ -129,3 +129,107 @@ console.log(str); //=>'a-b-c-d'
 `localCompare`
 
 `trim` / `trimLeft` / `trimRight`
+
+### 格式化时间字符串
+
+#### 方案一
+
+```
+      //2020年8月20日11:28:46
+      let addZero = (val) => (val.length < 2 ? "0" + val : val);
+
+      let str = "2020-8-20 11:28:46";
+
+      let arr = str.split(" ");
+      let arrLeft = arr[0].split("-");
+      let arrRight = arr[1].split(":");
+
+      let res =
+        arrLeft[0] +
+        "年" +
+        addZero(arrLeft[1]) +
+        "月" +
+        arrLeft[2] +
+        "日 " +
+        arrRight[0] +
+        "时" +
+        arrRight[1] +
+        "分" +
+        arrRight[2] +
+        "秒";
+      console.log(res); //=> '2020年08月20日 11时28分46秒'
+```
+
+#### 方案二
+
+```
+      let str = "2020-8-20 11:28:46";
+      let addZero = (val) => (val.length < 2 ? "0" + val : val);
+      let arr = str.split(/(?: |-|:)/g);
+      let res =
+        arr[0] +
+        "年" +
+        addZero(arr[1]) +
+        "月" +
+        addZero(arr[2]) +
+        "日 " +
+        addZero(arr[3]) +
+        "时" +
+        addZero(arr[4]) +
+        "分" +
+        addZero(arr[5]) +
+        "秒";
+      console.log(res);//=> '2020年08月20日 11时28分46秒'
+
+```
+
+#### 方案三
+
+```
+  let str = "2020-8-20 11:28:46";
+  let addZero = (val) => (val.length < 2 ? "0" + val : val);
+  let res =
+    str
+      .replace("-", "年")
+      .replace("-", "日")
+      .replace(":", "时")
+      .replace(":", "分") + "秒";
+  console.log(res);//=>'2020年08月20日 11时28分46秒'
+
+```
+
+#### 方案四
+
+```
+      let str = "2020-8-20 11:28:46";
+      let addZero = (val) => (val.length < 2 ? "0" + val : val);
+
+      let n = str.indexOf("-");
+      let m = str.lastIndexOf("-");
+      let x = str.lastIndexOf(" ");
+      let y = str.indexOf(":");
+      let z = str.lastIndexOf(":");
+
+      let year = str.substring(0, n);
+      let month = str.substring(n + 1, m);
+      let date = str.substring(m + 1, x);
+      let hours = str.substring(x + 1, y);
+      let minutes = str.substring(y + 1, z);
+      let seconds = str.substring(z + 1);
+
+      let res =
+        year +
+        "年" +
+        addZero(month) +
+        "月" +
+        addZero(date) +
+        "日 " +
+        addZero(hours) +
+        "时" +
+        addZero(minutes) +
+        "分" +
+        addZero(seconds) +
+        "秒";
+      console.log(res); //=>'2020年08月20日 11时28分46秒'
+
+```
