@@ -35,7 +35,7 @@ let aas=document.querySelector('.aa')
   - nodeValue:文本内容
 - 注释节点
   - nodeType:8
-  - nodeName:'#commen'
+  - nodeName:'#comment'
   - nodeValue:注释内容
 - 文档节点 document
   - nodeType:9
@@ -44,6 +44,7 @@ let aas=document.querySelector('.aa')
 
 描述这些节点之间的关系的属性
 
+- parentNode:获取当前节点唯一的父节点
 - childNodes:获取所有的子节点
 - children:获取所有元素的子节点(子元素标签,IE6-8 注释节点也算)
 - firstChild:获取第一个子节点

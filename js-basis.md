@@ -11,7 +11,7 @@
 
 - 在控制台输出 console.log/dir/table...
 
-  > dir:输出一个对象的详细键值对信息
+  > dir:输出一个对象的详细键值对信息  
   > table:把一个多维 JSON 数组在控制台按照表格的方式呈现出来
 
 - 浏览器窗口弹窗 alert(弹窗)/confrim(选择性弹窗)/prompt(在 confrim 基础上多了个输入框)
@@ -364,6 +364,9 @@ console.log(person[1])//=>100
     - 1.typeof null =>'object' 但是 null 并不是对象
     - 2.基于 typeof 无法细分出当前值是否是普通对象还是数组对象，因为只要是对象数据类型，返回的结果都是‘object'
 - instanceof:用来检测当前实例是否属于某个类
+  > 实例 instanceof 类，属于返回 true，不属于返回 false
+  - 局限性
+    1. 要求检测的实例必须是对象数据类型的，基本数据类型的实例是无法基于它检测出来的
 - constructor:基于构造函数检测数据类型(也是基于类的方式)
 - Object.prototype.toString.call()：检测数据类型的最好方法
 
