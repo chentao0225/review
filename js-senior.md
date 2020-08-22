@@ -44,7 +44,7 @@
 ### let、const 和 var 的区别
 
 1. let 和 const 不存在变量提升机制
-   > 创建变量的六种方式中：var/function 有变量提升，而 let/const/class/import 都不存在这个机制
+   > 创建变量的六种方式中：var/function 有变量提升，而 let/const/class/import 都不存在这个机制，但是在词法解析阶段也能确定当前变量是全局变量还是私有变量所以不能在 let 声明之前使用私有变量
 2. var 允许重复声明，而不是 let 是不允许的
 
    > 在相同作用域中(或执行上下文中)
@@ -62,7 +62,8 @@
    console.log(a)
    ```
 
-3. let 能解决 typeof 检测时出现的暂时性死区问题(let 比 var 更严谨)
+3. 在全局作用域下用 var 声明的变量相当于给 window 设置了对应的属性，let 没有，只是个变量
+4. let 能解决 typeof 检测时出现的暂时性死区问题(let 比 var 更严谨)
 
 ```
     //console.log(a)
@@ -77,7 +78,7 @@
     let a
 ```
 
-4. let 会产生私有的块级作用域，var 不会
+5. let 会产生私有的块级作用域，var 不会
 
 ### 闭包作用域
 
@@ -86,7 +87,7 @@
    - 开辟一个堆内存
    - 把函数体中的代码当做字符串存储进去
    - 把堆内存的地址赋值给函数名、变量名
-   - **函数在哪创建，那么它执行的时候所需要查找的上级作用域就是堆**
+   - **函数在哪创建，那么它执行的时候所需要查找的上级作用域就是谁**
 
 2. 函数执行
 
@@ -180,10 +181,7 @@
    //... 这样写在某些角度上也是为了减少全局变量
    ```
 
-
-    ```
-
-2. 基于 let、const、class 等创建变量，会把所在大括号（除对象大括号之外）当做一个全新的私有块级作用域
+2) 基于 let、const、class 等创建变量，会把所在大括号（除对象大括号之外）当做一个全新的私有块级作用域
 
    - 函数执行会产生私有的栈内存(作用域/执行上下文)
 
@@ -211,8 +209,8 @@
 #### 如何确定 this 是谁
 
 1. 给元素的某个事件绑定方法，当事件触发方法执行的时候，方法中的 this 是当前操作元素本身
-2. 当方法执行的时候，看方法前面是否有点，没有点 this 就是 window 或者 undefined；有点，点前面是谁 this 就是谁
-3. 自执行函数中 this 是 window 或者 undefined
+2. 当方法执行的时候，看方法前面是否有点，没有点 this 就是 window 或者 undefined(严格模式下是 undefined)；有点，点前面是谁 this 就是谁
+3. 在构造函数模式执行中，函数体中的 this 是当前类的实例
 
 ```
 var name='sun'
@@ -287,4 +285,66 @@ a.name
 a.age
 ...
 
+```
+
+**构造原型模式(正统面向对象编程)**
+
+> 自己能够创造出自定义类和对应实例，构建起一套完整的面向对象模型
+
+### 原型及原型链模式
+
+1. 每一个函数数据类型的值，都有一个天生自带的属性：prototype(原型),这个属性的属性值是一个对象("用来存储实例公用属性和方法")
+
+   - 普通的对象
+   - 类(自定义类和内置类)
+
+2. 在 prototype 这个对象中，有一个天生自带的属性：constructor，这个属性存储的是当前函数本身
+   ```
+   Fn.prototype.constructor===Fn
+   ```
+3. 没一个对象数据类型的值，也有一个天生自带的属性`__proto__`，这个属性指向"所属类的原型 prototype"
+   - 普通对象、数组、正则、Math、日期、类数组
+   - 实例也是对象数据类型的值
+   - 函数的原型 prototype 属性的值也是对象类型的
+   - 函数也是对象数据类型的值
+
+**原型链查找机制**
+
+> 1. 先找自己私有的属性，有则调取使用，没有继续找
+> 2. 基于`__proto__`找到所属类原型上的方法(Fn.prototype)，如果还没有则继续基于`__proto__`往上找...一直找到 Object.prototype 为止
+
+**hasOwnProperty**
+
+> 检测某一个属性名是否为当前对象的私有属性
+>
+> `in`：检测这个属性是否属于某个对象(不管是私有属性还是公有属性，只要是它的属性结果就是 true)  
+> 自己堆中有的就是私有属性,基于`__proto__`查找的就是公有属性(**proto**在 IE 浏览器中(EDGE 除外)给保护起来了,不让在代码中操作它 值为 undefined)
+
+```
+let arr=[1,2,3]
+console.log('0' in arr)//=>true
+console.log('splice' in arr)//=>true
+console.log(arr.hasOwnProperty('0'))//=>true
+console.log(arr.hasOwnProperty('sort'))//=>false //sort是它的公有属性不是私有属性
+
+console.log(Array.prototype.hasOwnProperty('hasOwnProperty'))//=>false
+console.log(Object.prototype.hasOwnProperty('hasOwnProperty'))//=>true
+
+```
+
+**自定义 hasPubProperty**
+
+> 检测某个属性是否为对象的公有属性
+>
+> 方法：是它的属性，但不是私有的
+
+```
+Object.prototype.hasPubProperty=function(property){
+    if(!['string','number','boolean'].includes(typeof property))return false
+    let n=property in this,
+        m=this.hasOwnProperty(property)
+    return n&&!m
+}
+console.log(Array.prototype.hasPubProperty('push'))//false
+console.log([].hasPubProperty('push'))//true
 ```
