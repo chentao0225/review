@@ -2,7 +2,7 @@
 
 ### 日期对象的基本操作
 
-```
+```javascript
 let time=new Date()
 获取当前客户端(本机电脑)本地时间
 这个时间用户是可以自己修改的，所以不能作为重要的参考数据
@@ -30,13 +30,13 @@ typeof time; //=>'object'
 
 > new Date()除了获取本地时间，还可以把一个时间格式字符串转为标准的时间格式
 
-```
-new Date('2020/8/20')
+```javascript
+new Date("2020/8/20");
 //=>Thu Aug 20 2020 00:00:00 GMT+0800 (中国标准时间)
 /*
-* 支持的格式
-*    YYYY/MM/DD
-*    YYYY/MM/DD hh:mm:ss
-*    YYYY-MM-DD IE不支持
-*/
+ * 支持的格式
+ *    YYYY/MM/DD
+ *    YYYY/MM/DD hh:mm:ss
+ *    YYYY-MM-DD IE不支持
+ */
 ```

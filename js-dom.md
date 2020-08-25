@@ -12,12 +12,12 @@
 - [context].querySelector([selector]) 在指定上下文中，通过选择器获取到指定的元素对象
 - [context].querySelectorAll([selector]) 在指定上下文中，通过选择器获取到指定的元素集合
 
-```
+```javascript
 //=>querySelector / querySelectorAll 不兼容IE6-8
-let box=document.querySelector('#box')
-let links=box.querySelectorAll('a')
+let box = document.querySelector("#box");
+let links = box.querySelectorAll("a");
 // links=box.querySelectorAll('#box a')
-let aas=document.querySelector('.aa')
+let aas = document.querySelector(".aa");
 ```
 
 ### 节点和描述节点之间关系的属性

@@ -60,11 +60,11 @@
 
 > 检测一个值是否是为非有效数字，如果不是有效数字返回 true,反之返回 false
 
-```
-console.log(isNaN(10))//=>false
-console.log(isNaN('aa'))//=>true
-console.log(isNaN('10'))//=>false
-'10'.toString()//=>10在比较
+```javascript
+console.log(isNaN(10)); //=>false
+console.log(isNaN("aa")); //=>true
+console.log(isNaN("10")); //=>false
+"10".toString(); //=>10在比较
 ```
 
 > 在使用 isNaN 进行检测的时候，首先会检测的值是否为数字类型，如果不是，先基于 Number()这个方法，把值转为数字类型，然后在检测
@@ -87,17 +87,17 @@ console.log(isNaN('10'))//=>false
 
   * string to number
     > 把字符串转换为数字，只要字符串中包含任意一个非有效数字字符(第一个点除外)结果都是 NaN,空字符串会变成数字零
-    ```
+    ```javascript
     console.log(Number('12.5))//=>12.5
     console.log(Number('12.5px'))//=>NaN
     console.log(Number('12.5.5'))//=>NaN
     console.log(Number(''))//=>0
     ```
   * boolean to number
-    ```
-    console.log(true)// =>1
-    console.log(false)//=> 0
-    console.log(isNaN(false))//=> false
+    ```javascript
+    console.log(true); // =>1
+    console.log(false); //=> 0
+    console.log(isNaN(false)); //=> false
     ```
   * null to number -> 0
 
@@ -107,7 +107,7 @@ console.log(isNaN('10'))//=>false
 
     > 把引用数据类型转换为数字，是先把它基于 toString 方法转换为字符串，然后转换为数字
 
-    ```
+    ```javascript
     console.log(Number({name:'sun'}))//=>NaN
     console.log(Number({}))//=>NaN
     对象.toString()=>[object Object]=>NaN
@@ -122,12 +122,12 @@ console.log(isNaN('10'))//=>false
   > 遵循按照字符串从左至右查找的机制找有效字符串(所以传递的值一定是字符串，不是也会转换为字符串然后查找)  
   > 也是转换为数字的方法，对于字符串来说，他是从左到右依次查找有效数字字符，直到遇到非有效数字字符，停止查找（不管后面是否还有数字，都不找了），把找到的当做数字返回 (如果不是字符串会先把他变成字符串在从左至右查找)，如果没有找到有效数字字符，也返回 NaN
 
-  ```
-  console.log(parseInt('12.5px'))//=>12
-  console.log(parseFloat('12.5px'))//=>12.5
-  console.log(parseInt('width:12.5px'))//=>NaN
-  console.log(parseFloat(true))//=>NaN
-  console.log(parseInt(''))//=>NaN
+  ```javascript
+  console.log(parseInt("12.5px")); //=>12
+  console.log(parseFloat("12.5px")); //=>12.5
+  console.log(parseInt("width:12.5px")); //=>NaN
+  console.log(parseFloat(true)); //=>NaN
+  console.log(parseInt("")); //=>NaN
   ```
 
 * ==
@@ -141,7 +141,7 @@ console.log(isNaN('10'))//=>false
 
 - [val].toString()
 
-  ```
+  ```javascript
   let a=12
   console.log(a.toString())//=>'12'
   console.log((NaN).toString()) //=>'NaN'
@@ -155,7 +155,7 @@ console.log(isNaN('10'))//=>false
 
 - 字符串拼接
 
-  ```
+  ```javascript
   //四则运算法则中，除加法之外，其余都是数学计算，只有加法可能存在字符串拼接
   （一旦遇到字符串，则不是数学运算，而是字符串拼接）
   console.log('10'+10) //=>'1010'
@@ -176,15 +176,15 @@ console.log(isNaN('10'))//=>false
 
 - Boolean([val])
 
-  ```
-  console.log(Boolean(0))//=>false
-  console.log(Boolean(''))//=>false
-  console.log(Boolean(' '))//=>true
-  console.log(Boolean(null))//=>false
-  console.log(Boolean(undefined))//=>false
-  console.log(Boolean([]))//=>true
-  console.log(Boolean([12]))//=>true
-  console.log(Boolean(-1))//=>true
+  ```javascript
+  console.log(Boolean(0)); //=>false
+  console.log(Boolean("")); //=>false
+  console.log(Boolean(" ")); //=>true
+  console.log(Boolean(null)); //=>false
+  console.log(Boolean(undefined)); //=>false
+  console.log(Boolean([])); //=>true
+  console.log(Boolean([12])); //=>true
+  console.log(Boolean(-1)); //=>true
   ```
 
 - !/!!
@@ -192,19 +192,19 @@ console.log(isNaN('10'))//=>false
   > !:取反(先转为布尔，然后取反)  
   > !!:取反在取反，只相当于转换为布尔<=>Boolean
 
-  ```
-  console.log(!1)//=>false
-  console.log(!!1)//=>true
+  ```javascript
+  console.log(!1); //=>false
+  console.log(!!1); //=>true
   ```
 
 - 条件判断
 
   > 如果条件只是一个值，不是==、===、!=、>=等这些比较，是要把这个值先转换为布尔类型，然后验证真假
 
-  ```
-  if(1) console.log('ceshi')//1=>true
-  if('3px'+3) console.log('ceshi2')//'3px3'=>true
-  if('3px'-2) console.log('ceshi3')//=>NaN-2=NaN=>false
+  ```javascript
+  if (1) console.log("ceshi"); //1=>true
+  if ("3px" + 3) console.log("ceshi2"); //'3px3'=>true
+  if ("3px" - 2) console.log("ceshi3"); //=>NaN-2=NaN=>false
   ```
 
 ### Null / Undefined
@@ -213,15 +213,15 @@ console.log(isNaN('10'))//=>false
 
 - null:意料之中（一般都是开始不知道值，我们手动先设置为 null，后期再给予赋值操作）
 
-  ```
+  ```javascript
   let num=null //=>let num=0
   一般最好用null作为初始的空值，因为零不是空值，他在栈内存中有自己的存储空间（占了位置）
   ```
 
 - undefined ：意料之外(不是我能决定的)
 
-  ```
-  let num //创建一个变量没有赋值，默认值是undefined
+  ```javascript
+  let num; //创建一个变量没有赋值，默认值是undefined
   ```
 
 ### Object 对象数据类型
@@ -231,7 +231,7 @@ console.log(isNaN('10'))//=>false
 > {[key]:[value],...}任何一个对象都是用零到多组键值对(属性名：属性值)组成的(并且属性名不能重复)  
 > 一个对象的属性名只有数字或字符串(等基本类型值)
 
-```
+```javascript
 let person={name:'zs',age:22,msg:'测试',1:100}
 
 //设置属性名属性值
@@ -270,18 +270,17 @@ console.log(person[1])//=>100
   - 1.我们中括号中设置的是属性值，它的属性名是默认生成的数字，从零开始递增，而且这个数字代表每一项的位置，称为‘索引’=>从零开始，连续递增，代表每一项位置的数字属性名
   - 2.天生默认一个属性名 length,存储数组的长度
 
-  ```
-
-  let ary=[1,'a',true,{}]
-  console.log(ary.length)//=>4
-  console.log(ary['length'])//=>4
-  console.log(ary[1])//=>'a'
+  ```javascript
+  let ary = [1, "a", true, {}];
+  console.log(ary.length); //=>4
+  console.log(ary["length"]); //=>4
+  console.log(ary[1]); //=>'a'
   //第一项索引为0 最后一项索引为ary.length-1
-  console.log(ary[0])//=>1
-  console.log(ary[ary.length])//=>{}
+  console.log(ary[0]); //=>1
+  console.log(ary[ary.length]); //=>{}
   //向数组末尾追加内容
-  ary[ary.length]=100
-  console.log(ary)//=>[1,'a',true,{},100]
+  ary[ary.length] = 100;
+  console.log(ary); //=>[1,'a',true,{},100]
   ```
 
 ### 函数 function
@@ -296,7 +295,7 @@ console.log(person[1])//=>100
 
   - 普通函数
 
-    ```
+    ```javascript
     //=>ES5老方式
     function [函数名]([形参变量1],...){
     //函数体：基于JS完成需要实现的功能
@@ -309,15 +308,15 @@ console.log(person[1])//=>100
 
     > 函数表达式:把一个匿名函数本身作为值赋值给其他东西，这种函数一般不手动触发，而且靠其他程序驱动触发执行(例如：触发某个时间的时候把它执行等)
 
-    ```
-      document.body.onclick=function(){}
-      setTimeout(function(){},1000)//设置定时器，1000ms后执行匿名函数
+    ```javascript
+    document.body.onclick = function () {};
+    setTimeout(function () {}, 1000); //设置定时器，1000ms后执行匿名函数
     ```
 
     > 自执行函数:创建完一个匿名函数，紧接着就把当前函数加小括号执行
 
-    ```
-      (function(n){}(100))
+    ```javascript
+    (function (n) {})(100);
     ```
 
   - 箭头函数 (ES6)
@@ -325,11 +324,11 @@ console.log(person[1])//=>100
     > 形参默认值：当没有给形参传递实参色时候,执行默认值  
     > 箭头函数中没有 arguments，但是可以使用剩余运算符(...)获取到传递的实参集合(它是数组)  
     > 箭头函数中的 this 某些场景也是方便我们操作的
-    ```
-      let sum = (n,m) =>{
-        return n+m
-      }
-      let test = (n = 0,m = 0) => n + m
+    ```javascript
+    let sum = (n, m) => {
+      return n + m;
+    };
+    let test = (n = 0, m = 0) => n + m;
     ```
 
 - 形参
@@ -341,7 +340,7 @@ console.log(person[1])//=>100
   > 函数体中遇到 return，后面代码则不再执行了
 - 执行函数
   > 每一次函数执行的目的都是把函数体中的代码(先从字符串变为代码)执行=>形成一个全新的私有栈内存
-  ```
+  ```javascript
    [函数名]([实参1],...)
   ```
 
@@ -380,7 +379,7 @@ console.log(person[1])//=>100
 
 - if/else if /else
 
-  ```
+  ```javascript
 
   if(条件){
   条件成立执行
@@ -397,11 +396,9 @@ console.log(person[1])//=>100
   - 1. 如果处理的事情比较多，可以用括号包起来，每一件事情用逗号分隔
   - 2. 如果不需要处理事情，可以使用 null/undefined 占位
 
-  ```
-
-  let a=10
-  a>=10?console.log("true"):console.log('false')
-
+  ```javascript
+  let a = 10;
+  a >= 10 ? console.log("true") : console.log("false");
   ```
 
 - switch case :一个变量在不同值情况下的不同操作
@@ -411,23 +408,21 @@ console.log(person[1])//=>100
   - 3.不加 break，当前条件成立执行完成后，后面条件无论是否成立都要执行，直到遇到 break 为止(不加 break 可以实现变量在某些值的情况下做相同的事情)
   - 4.每一种 case 情况的比较用的都是==="绝对相等"
 
-  ```
-
+  ```javascript
   let a = 10;
   switch (a) {
-  case 1:
-  console.log("1");
-  break;
-  case 5:
-  console.log("5");
-  break;
-  case 10:
-  console.log("10");
-  break;
-  default:
-  console.log("null");
+    case 1:
+      console.log("1");
+      break;
+    case 5:
+      console.log("5");
+      break;
+    case 10:
+      console.log("10");
+      break;
+    default:
+      console.log("null");
   }
-
   ```
 
 #### == vs ===
@@ -444,20 +439,20 @@ console.log(person[1])//=>100
 > A&&B:A 为真返回 B，A 为假返回 A  
 > &&的优先级高于||
 
-```
-let a=0||false
-console.log(a)//=>false
+```javascript
+let a = 0 || false;
+console.log(a); //=>false
 
-a=1||false
-console.log(a)//=>1
+a = 1 || false;
+console.log(a); //=>1
 
-a=1&&100
-console.log(a)//=>100
-a=0&&100
-console.log(a)//=>0
-a=0||1&&2||3
+a = 1 && 100;
+console.log(a); //=>100
+a = 0 && 100;
+console.log(a); //=>0
+a = 0 || (1 && 2) || 3;
 //先算1&&2 ->0||2||3->2||3->2
-console.log(a)//=>2
+console.log(a); //=>2
 ```
 
 ### 循环
@@ -476,8 +471,9 @@ console.log(a)//=>2
     > 对象中有几组键值对，循环就执行几次（除非 break 结束）
     > key 变量存储的值：当前对象的属性名
     > for in 在遍历的时候，优先循环数字属性名（从小到大）
-    ```
-      for(let key in obj){}
+    ```javascript
+    for (let key in obj) {
+    }
     ```
   - for of 循环(ES6 新增)
   - while 循环
@@ -494,7 +490,7 @@ console.log(a)//=>2
 
 - 细节知识
 
-```
+```javascript
   let i='10'
   i=i+1 => '10'+1 => '101'
   i+=1 => '10'+1 => '101'
@@ -506,7 +502,7 @@ console.log(a)//=>2
 
 ## 基础知识练习题
 
-```
+```javascript
   1. !(!"Number(undefined)")
 
   2. isNaN(parseInt(new Date())) + Number([1]) + typeof undefined

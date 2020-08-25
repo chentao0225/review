@@ -2,19 +2,18 @@
 
 > 所有用 单引号、双引号、反引号、包起来的都是字符串
 
-```
-let str='yangfanqihang'
-str.length//=>字符串长度
-str[0]//=>获取索引为零字符(第一个)
-str[str.length-1]//=>获取最后一个字符
-str[1000]//=>undefined
+```javascript
+let str = "yangfanqihang";
+str.length; //=>字符串长度
+str[0]; //=>获取索引为零字符(第一个)
+str[str.length - 1]; //=>获取最后一个字符
+str[1000]; //=>undefined
 
 //循环输出字符串中的每一个字符
 for (let i = 0; i < str.length; i++) {
   let char = str[i];
   console.log(char);
 }
-
 ```
 
 `charAt` / `charCodeAt`
@@ -27,14 +26,14 @@ for (let i = 0; i < str.length; i++) {
 >  返回查找到的字符  
 >  找不到返回的是空字符串不是 undefined 或者对应的编码值
 
-```
-let str='yangfanqihang'
-console.log(str.charAt(0))//=>'y'
-console.log(str[0])//=>'y'
-console.log(str.charAt(1000))//=>''
-console.log(str[1000])//undefined
-console.log(str.charCodeAt(0))//=>121
-console.log(String.fromCharCode(121))//=>'y'
+```javascript
+let str = "yangfanqihang";
+console.log(str.charAt(0)); //=>'y'
+console.log(str[0]); //=>'y'
+console.log(str.charAt(1000)); //=>''
+console.log(str[1000]); //undefined
+console.log(str.charCodeAt(0)); //=>121
+console.log(String.fromCharCode(121)); //=>'y'
 ```
 
 `substr` / `substring` / `slice`
@@ -44,7 +43,7 @@ console.log(String.fromCharCode(121))//=>'y'
 >  substring(n,m):从索引 n 开始找到索引为 m 处(不含 m)  
 >  slice(n,m):和 substring 一样，都是找到索引为 m 处，但是 slice 可以支持负数作为索引，其余两个方法是不可以的
 
-```
+```javascript
 let str = "yangfanqihang";
 console.log(str.substr(2, 6)); //=>'ngfanq'
 console.log(str.substring(2, 6)); //=>'ngfa'
@@ -55,7 +54,6 @@ console.log(str.substring(0, 6)); //=>'yangfa'
 console.log(str.slice(0, 6)); //=>'yangfa'
 console.log(str.substring(-6, -2)); //=>'' 不支持负数索引
 console.log(str.slice(-6, -2)); //=>'qiha' 支持负数索引=>快速查找负数所有可以按照str.length+负索引的方式找 slice(13-6,13-2)=>slice(7,11)
-
 ```
 
 `indexOf` / `lastIndexOf` / `includes`
@@ -63,7 +61,7 @@ console.log(str.slice(-6, -2)); //=>'qiha' 支持负数索引=>快速查找负�
 > indexOf/lastIndexOf 查找某个字符第一次/最后一次出现位置的索引 没有找的返回-1  
 > includes:查看是否包含某个字符
 
-```
+```javascript
 let str = "yangfanqihang";
 console.log(str.indexOf("n")); //=>2
 console.log(str.lastIndexOf("n")); //=>11
@@ -74,7 +72,6 @@ console.log(str.indexOf("fang")); //=>-1
 
 console.log(str.indexOf("n", 5)); //=>6  查找字符串索引5及以后的字符串中，n第一次出现的位置索引
 console.log(str.includes("@")); //=>false
-
 ```
 
 `toUpperCase` / `toLowerCase`
@@ -83,7 +80,7 @@ console.log(str.includes("@")); //=>false
 > toUpperCase():转大写  
 > toLowerCase():转小写
 
-```
+```javascript
 let str = "YangFanQiHang";
 str = str.toUpperCase();
 console.log(str); //=> 'YANGFANQIHANG'
@@ -93,35 +90,32 @@ console.log(str); //=> 'yangfanqihang'
 //实现首字母大写
 str = str.substr(0, 1).toUpperCase() + str.substr(1);
 console.log(str); //=> Yangfanqihang
-
 ```
 
 `split`
 
 > split:把字符串按照指定的分隔符拆分成数组(和数组中的 join 对应)
 
-```
+```javascript
 //把|分隔符变为,分隔符
 let str = "a|b|c|d";
 let arr = str.split("|");
 console.log(arr); //=>["a", "b", "c", "d"]
 str = arr.join(",");
 console.log(str); //=>'a,b,c,d'
-
 ```
 
 `replace`
 
 > replace(老字符,新字符):实现字符串的替换
 
-```
+```javascript
 let str = "a@b@c@d";
 str = str.replace("@", "-");
 console.log(str); //=>'a-b@c@d' 在不使用正则表达式的情况下执行一次replace只能替换一次字符
 
 str = str.replace(/@/g, "-");
 console.log(str); //=>'a-b-c-d'
-
 ```
 
 `match`
@@ -134,102 +128,99 @@ console.log(str); //=>'a-b-c-d'
 
 #### 方案一
 
-```
-      //2020年8月20日11:28:46
-      let addZero = (val) => (val.length < 2 ? "0" + val : val);
+```javascript
+//2020年8月20日11:28:46
+let addZero = (val) => (val.length < 2 ? "0" + val : val);
 
-      let str = "2020-8-20 11:28:46";
+let str = "2020-8-20 11:28:46";
 
-      let arr = str.split(" ");
-      let arrLeft = arr[0].split("-");
-      let arrRight = arr[1].split(":");
+let arr = str.split(" ");
+let arrLeft = arr[0].split("-");
+let arrRight = arr[1].split(":");
 
-      let res =
-        arrLeft[0] +
-        "年" +
-        addZero(arrLeft[1]) +
-        "月" +
-        arrLeft[2] +
-        "日 " +
-        arrRight[0] +
-        "时" +
-        arrRight[1] +
-        "分" +
-        arrRight[2] +
-        "秒";
-      console.log(res); //=> '2020年08月20日 11时28分46秒'
+let res =
+  arrLeft[0] +
+  "年" +
+  addZero(arrLeft[1]) +
+  "月" +
+  arrLeft[2] +
+  "日 " +
+  arrRight[0] +
+  "时" +
+  arrRight[1] +
+  "分" +
+  arrRight[2] +
+  "秒";
+console.log(res); //=> '2020年08月20日 11时28分46秒'
 ```
 
 #### 方案二
 
-```
-      let str = "2020-8-20 11:28:46";
-      let addZero = (val) => (val.length < 2 ? "0" + val : val);
-      let arr = str.split(/(?: |-|:)/g);
-      let res =
-        arr[0] +
-        "年" +
-        addZero(arr[1]) +
-        "月" +
-        addZero(arr[2]) +
-        "日 " +
-        addZero(arr[3]) +
-        "时" +
-        addZero(arr[4]) +
-        "分" +
-        addZero(arr[5]) +
-        "秒";
-      console.log(res);//=> '2020年08月20日 11时28分46秒'
-
+```javascript
+let str = "2020-8-20 11:28:46";
+let addZero = (val) => (val.length < 2 ? "0" + val : val);
+let arr = str.split(/(?: |-|:)/g);
+let res =
+  arr[0] +
+  "年" +
+  addZero(arr[1]) +
+  "月" +
+  addZero(arr[2]) +
+  "日 " +
+  addZero(arr[3]) +
+  "时" +
+  addZero(arr[4]) +
+  "分" +
+  addZero(arr[5]) +
+  "秒";
+console.log(res); //=> '2020年08月20日 11时28分46秒'
 ```
 
 #### 方案三
 
-```
-  let str = "2020-8-20 11:28:46";
-  let addZero = (val) => (val.length < 2 ? "0" + val : val);
-  let res =
-    str
-      .replace("-", "年")
-      .replace("-", "日")
-      .replace(":", "时")
-      .replace(":", "分") + "秒";
-  console.log(res);//=>'2020年08月20日 11时28分46秒'
-
+```javascript
+let str = "2020-8-20 11:28:46";
+let addZero = (val) => (val.length < 2 ? "0" + val : val);
+let res =
+  str
+    .replace("-", "年")
+    .replace("-", "日")
+    .replace(":", "时")
+    .replace(":", "分") + "秒";
+console.log(res); //=>'2020年08月20日 11时28分46秒'
 ```
 
 #### 方案四
 
-```
-      let str = "2020-8-20 11:28:46";
-      let addZero = (val) => (val.length < 2 ? "0" + val : val);
+```javascript
+let str = "2020-8-20 11:28:46";
+let addZero = (val) => (val.length < 2 ? "0" + val : val);
 
-      let n = str.indexOf("-");
-      let m = str.lastIndexOf("-");
-      let x = str.lastIndexOf(" ");
-      let y = str.indexOf(":");
-      let z = str.lastIndexOf(":");
+let n = str.indexOf("-");
+let m = str.lastIndexOf("-");
+let x = str.lastIndexOf(" ");
+let y = str.indexOf(":");
+let z = str.lastIndexOf(":");
 
-      let year = str.substring(0, n);
-      let month = str.substring(n + 1, m);
-      let date = str.substring(m + 1, x);
-      let hours = str.substring(x + 1, y);
-      let minutes = str.substring(y + 1, z);
-      let seconds = str.substring(z + 1);
+let year = str.substring(0, n);
+let month = str.substring(n + 1, m);
+let date = str.substring(m + 1, x);
+let hours = str.substring(x + 1, y);
+let minutes = str.substring(y + 1, z);
+let seconds = str.substring(z + 1);
 
-      let res =
-        year +
-        "年" +
-        addZero(month) +
-        "月" +
-        addZero(date) +
-        "日 " +
-        addZero(hours) +
-        "时" +
-        addZero(minutes) +
-        "分" +
-        addZero(seconds) +
-        "秒";
-      console.log(res); //=>'2020年08月20日 11时28分46秒'
-
+let res =
+  year +
+  "年" +
+  addZero(month) +
+  "月" +
+  addZero(date) +
+  "日 " +
+  addZero(hours) +
+  "时" +
+  addZero(minutes) +
+  "分" +
+  addZero(seconds) +
+  "秒";
+console.log(res); //=>'2020年08月20日 11时28分46秒'
 ```
