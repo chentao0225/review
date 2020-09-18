@@ -142,28 +142,28 @@ console.log(isNaN("10")); //=>false
 - [val].toString()
 
   ```javascript
-  let a=12
-  console.log(a.toString())//=>'12'
-  console.log((NaN).toString()) //=>'NaN'
-  null和undefined是禁止直接toString的
-  (null).toString()//=>报错
-  但是和undefined一样转换为字符串的结果就是'null'/'undefined'
+  let a = 12;
+  console.log(a.toString()); //=>'12'
+  console.log(NaN.toString()); //=>'NaN'
+  //null和undefined是禁止直接toString的
+  //(null).toString()//=>报错
+  //但是和undefined一样转换为字符串的结果就是'null'/'undefined'
 
-  普通对象.toString()的结果是"[object Object]" =>?
-  =>Object.prototype.toString方法不是转换为字符串，而是用来检测数据类型的
+  //普通对象.toString()的结果是"[object Object]" =>?
+  //=>Object.prototype.toString方法不是转换为字符串，而是用来检测数据类型的
   ```
 
 - 字符串拼接
 
   ```javascript
   //四则运算法则中，除加法之外，其余都是数学计算，只有加法可能存在字符串拼接
-  （一旦遇到字符串，则不是数学运算，而是字符串拼接）
+  //（一旦遇到字符串，则不是数学运算，而是字符串拼接）
   console.log('10'+10) //=>'1010'
   console.log('10'-10)//=>0
   console.log('10px'-10)//=>NaN
 
   10+[] -> 10+ ''-> '10'
-  空数组变为数字，先要经历变为空字符串，遇到字符串，直接变为字符串拼接
+  //空数组变为数字，先要经历变为空字符串，遇到字符串，直接变为字符串拼接
   ```
 
 ### Boolean 布尔数据类型
@@ -214,8 +214,8 @@ console.log(isNaN("10")); //=>false
 - null:意料之中（一般都是开始不知道值，我们手动先设置为 null，后期再给予赋值操作）
 
   ```javascript
-  let num=null //=>let num=0
-  一般最好用null作为初始的空值，因为零不是空值，他在栈内存中有自己的存储空间（占了位置）
+  let num = null; //=>let num=0
+  // 一般最好用null作为初始的空值，因为零不是空值，他在栈内存中有自己的存储空间（占了位置）
   ```
 
 - undefined ：意料之外(不是我能决定的)
@@ -232,35 +232,34 @@ console.log(isNaN("10")); //=>false
 > 一个对象的属性名只有数字或字符串(等基本类型值)
 
 ```javascript
-let person={name:'zs',age:22,msg:'测试',1:100}
+let person = { name: "zs", age: 22, msg: "测试", 1: 100 };
 
 //设置属性名属性值
 //=> 属性名不能重复，如果属性名已经存在，不属于新增属于修改属性值
-person.a='cs'
-person.name='sun'
-console.log(person.a)//=>'cs'
-console.log(person.name)//=>'sun'
+person.a = "cs";
+person.name = "sun";
+console.log(person.a); //=>'cs'
+console.log(person.name); //=>'sun'
 
 //删除属性
 //=>真删除:把属性彻底删除
-delete person[1]
+delete person[1];
 
 //=>假删除:属性还在，值为空
-person.a=null
-console.log(person.a)//=>null
+person.a = null;
+console.log(person.a); //=>null
 
 //获取属性名对应的属性值
-=>对象.属性名
-=>对象[属性名] 属性名是数字或者字符串格式的
-=>如果当前属性名不存在，默认的属性值是undefined
-=>如果属性名是数字，则不能使用点的方式获取属性值
-console.log(person.name)//=>'zs'
-console.log(person[age])//=>22
-console.log(person.sex)//=>undefined
+//=>对象.属性名
+//=>对象[属性名] 属性名是数字或者字符串格式的
+//=>如果当前属性名不存在，默认的属性值是undefined
+//=>如果属性名是数字，则不能使用点的方式获取属性值
+console.log(person.name); //=>'zs'
+console.log(person[age]); //=>22
+console.log(person.sex); //=>undefined
 
-console.log(person[1])//=>100
+console.log(person[1]); //=>100
 //console.log(person.1)//SyntaxError:语法错误
-
 ```
 
 - 数组是特殊的对象数据类型

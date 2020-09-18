@@ -11,8 +11,9 @@
 >
 > - 带 var 的只是提前声明(declare) var a; 如果只声明没有赋值，默认值是 undefined
 > - 带 function 的不仅声明，还定义了(defined) "a=11"定义其实就是赋值，准确来说就是让变量和某个值进行关联
+> - 函数表达式，由于是用 var 来创建一个变量，变量提升阶段只会声明变量，不会赋值。(真实项目中这种方式最常用，因为操作严谨)
 
-**变量提升关于条件判断的处理**
+> **变量提升关于条件判断的处理**
 
 > 不管条件是否成立都要进行变量提升，但是函数有特殊性：在老版本浏览器中，确实不论条件是否成立，函数也是提前声明或者定义的，但是新版本浏览器中，为了兼容 ES6 严谨的语法规范，条件中的函数在变量提升阶段只能提前声明，不能提前定义
 
@@ -181,7 +182,7 @@ let a;
    //... 这样写在某些角度上也是为了减少全局变量
    ```
 
-2) 基于 let、const、class 等创建变量，会把所在大括号（除对象大括号之外）当做一个全新的私有块级作用域
+2. 基于 let、const、class 等创建变量，会把所在大括号（除对象大括号之外）当做一个全新的私有块级作用域
 
    - 函数执行会产生私有的栈内存(作用域/执行上下文)
 
@@ -226,6 +227,71 @@ obj.fn(); //=>this->obj
 fn(); //=>this->window（非严格模式下，严格模式下是undefined）
 //=>相当于window.fn()
 ```
+
+### 构造函数
+
+```javascript
+function Fn(a, b) {
+  this.a = a;
+  this.b = b;
+
+  // return 100;//返回的还是实例
+  // return {a:1}
+  // 如果手动return的是一个基本值，对返回的实例无影响，如果手动返回的是一个引用数据类型的值，会把默认返回的实例个替换掉(所以在构造函数模式下，我们一般不手动写return，防止把返回的实例给替换掉)
+}
+Fn(1, 2); //普通函数执行
+let f = new Fn(1, 2);
+// new Fn() 执行和普通函数执行的联系
+```
+
+> new 这种执行方式叫做"构造函数执行模式",此时的 Fn 不仅仅是一个函数名，被称为'类'，而返回的结果是一个对象，称为'实例'，而函数体中出现的 this 都是这个实例
+
+> 基本数据类型在 JS 中的特殊性
+
+1. 一定是自己所属类的实例
+2. 但是不一定是对象数据类型的
+
+   > 字面量创建方式(也是 Number 类的实例，也可以调取内置的公有方法)  
+   > 构造函数创建模式(创建出来的实例是对象类型的)
+
+> 构造函数执行，因为也具备普通函数执行的特点
+
+1. 和实例有关系的操作一定是 this.xx=xxx，因为 this 是当前类创造出来的实例
+2. 私有变量和实例没有必然的联系
+
+> new 的时候不论是否加小括号，都相当于把 Fn 执行了，也创建了对应的实例，只不过不加小括号是不能传递实参的
+
+### 函数的三种角色
+
+- 函数数据类型
+  1.  普通函数
+  2.  类(内置类 or 自定义类)
+- 对象数据类型
+  1.  {}普通对象 []数组对象 /^\$/正则对象 Date 日期对象 Math 数学函数对象 arguments 等类数组对象 HTMLCollection/NodeList 元素或者节点集合类数组对象...
+  2.  实例也是对象数据类型的
+  3.  类的 prototype 也是对象数据类型的(Function.prototype 除外，它是一个匿名空函数)
+  4.  函数也是对象
+
+---
+
+- 函数有三种角色
+  1. 普通函数
+     - 形参、实参、arguments、return、箭头函数
+     - 私有作用域(栈内存、执行上下文)
+     - 形参赋值&变量提升
+     - 作用域链
+     - 栈内存的释放和不释放(闭包)
+     - ...
+  2. 构造函数(类)
+     - 类和实例
+     - prototype 和 \_\_proto\_\_原型和原型链
+     - instanceof
+     - constructor
+     - hasOwnProperty
+     - ...
+  3. 普通对象
+     - 它是由键值对组成的
+     - ...
 
 ### 面向对象
 
@@ -498,3 +564,171 @@ document.body.onclick = fn.bind(obj);
 //=>bind的好处是：通过bind方法只是预先把fn中的this修改为obj此时fn并没有执行，当点击事件触发才会执行fn（call、apply都是改变this的同时立即把方法执行）
 //=>在IE6-8中不支持bind方法 预先作啥事的思想被称为'柯理化函数'
 ```
+
+`Object.create`
+
+> 创建一个空对象 obj，并且让空对象 obj 作为参数所属构造函数的实例
+
+`Object.defineProperty`
+
+> 会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回此对象
+
+`Object.keys`
+
+> 获取对象中所有的属性名，以数组的方式返回
+
+`Object.assign`
+
+> 用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+### 函数的防抖和节流
+
+- 函数防抖(debounce):不是某个事件触发就去执行函数，而是在指定的时间间隔内，执行一次，减少函数执行的次数
+
+```javascript
+/**
+ * debounce:函数防抖
+ * @params
+ *      fn:要执行的函数
+ *      wait:间隔等待的时间
+ *      immediate:在开始边界触发还是结束边界触发执行(true：在开始边界)
+ * @return
+ *      可被调用的函数
+ */
+function debounce(fn, wait, immediate) {
+  let result = null,
+    timeout = null;
+  return function (...args) {
+    let context = this,
+      now = immediate && !timeout;
+    clearTimeout(timeout); //在设置新的定时器之前，把之前的定时器清除，因为防抖的目的是等待时间内，只执行一次
+    timeout = setTimeout(() => {
+      timeout = null;
+      if (!immediate) result = fn.call(context, ...args);
+    }, wait);
+    if (now) result = fn.call(context, ...args);
+    return result;
+  };
+}
+```
+
+- 函数节流(throttle):为了缩减执行的频率，但不像防抖一样，一定时间内只能执行一次，而是一定时间内能执行多次
+
+```javascript
+/**
+ * throttle:函数节流
+ *  @params
+ *    fn:需要执行的函数
+ *    wait:设置间隔时间
+ *  @return
+ *    返回可被调用的函数
+ */
+
+function throttle(fn, wait) {
+  let timeout = null,
+    result = null,
+    previous = 0; //上一次执行的时间点
+  return function (...args) {
+    let now = new Date(),
+      context = this;
+
+    let remaining = wait - (now - previous);
+    //remaining小于等于0，表示上次执行至此所间隔时间已超过一个时间间隔
+    if (remaining <= 0) {
+      clearTimeout(timeout);
+      previous = now;
+      timeout = null;
+      result = fn.apply(context, args);
+    } else if (!timeout) {
+      timeout = setTimeout(() => {
+        previous = new Date();
+        timeout = null;
+        result = fn.apply(context, args);
+      }, remaining);
+    }
+    return result;
+  };
+}
+```
+
+### 定时器动画
+
+> 浏览器中的定时器有两种，设置一个定时器，规定在等待时间之后执行某个方法
+
+设置定时器
+
+- setTimeout
+
+  > 执行一次
+
+- setInterval
+  > 一直会执行下去(每间隔这么长时间都会执行)
+
+> 设置定时器会有一个返回值：是一个数字，代表当前是第几个定时器
+
+清除定时器
+
+> 清除第几个定时器
+
+- clearTimeout(数字)
+- clearInterval(数字)
+
+- window.requestAnimationFrame()
+  > JS 中比定时器动画更好的方式（HTML5 中提供的）
+
+封装一个简易的动画库
+
+```javascript
+/**
+ * animate:动画库
+ * @params
+ *    curEle:当前要运动的元素
+ *    target:目标样式值
+ *    duration:总时间
+ *    callback:回调函数,动画完成后做什么事
+ */
+function animate(curEle, target = {}, duration = 1000, callback) {
+  //准备T/B/C/D
+  let time = 0,
+    begin = {},
+    change = {};
+  for (let key in target) {
+    begin[key] = parseFloat(getComputedStyle(curEle)[key]);
+    change[key] = target[key] = begin[key];
+  }
+  let timer = setInterval(() => {
+    time += 16.7;
+    if (time >= duration) {
+      clearInterval(timer);
+      timer = null;
+      for (let key in target) {
+        curEle["style"][key] = target[key] + "px";
+      }
+      typeof callback === "function" ? callback() : null;
+      return;
+    }
+    for (let key in target) {
+      let cur = (time / duration) * change[key] + begin[key];
+      curEle["style"][key] = cur + "px";
+    }
+  }, 16.7);
+}
+```
+
+## 插件组件封装思想
+
+> 1. 基于面向对象的方式来处理
+>    - 调取一次插件当于创建插件的一个实例
+>    - 这样私有的可以设置，公有的方法也可以设置
+> 2. 要保证的几个事
+>    - 灵活且功能强大(适配更多的应用场景)
+>    - 容错性和可扩展性强
+>    - 追求极致的性能和优秀的代码管理方式
+>    - 开源精神
+
+**细节知识点**
+
+> 1.  封装公共方法的时候，如果需要传递的参数过多(超过两个就可以理解为多了),则不要定义为形参，让用户依次传递，这样会受到顺序、传或者不传等因素的影响，管理起来很复杂:可以把需要传递的值统一放到一个对象中(一般都是 options),这样传递的信息可传可不传，顺序也随便，最后把传递的信息覆盖默认的信息即可，方便管理，也方便进行二次扩展
+>
+> 2.  后期把需要用到的信息都挂载到当前类的实例中，这样后面不管在哪个方法中用这些信息，只要能获取到实例，直接通过实例获取即可
+>
+> 3.  插件中需要使用的工具类方法，一般放到类的私有属性上(普通对象)

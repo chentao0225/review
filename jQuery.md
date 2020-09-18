@@ -95,7 +95,17 @@
   > \$.ajax({url,method,async,dataType,success})
 
 - 常用的工具方法
+
   > - each([数组、类数组、对象],function(index,item){})
   > - toArray() 转换为数组
   > - makeArray() 把类数组转换为数组
   > - type 数据类型检测
+
+- animate:JQ 中实现的动画库
+  > \$元素.animate(目标样式,运动时间,运动方式,运动完执行的函数)
+  - stop:结束当前正在运行的动画,从现有的位置开始继续新的动画
+  - finish:也是结束当前正在运行的动画,和 STOP 的区别是,FINSH 是结束后快速运动到动画的结束位置，在开启新的动画
+  - 快捷动画
+    - show/hide/toggle 显示/隐藏/显示隐藏的切换
+    - fadeIn/fadeOut/fadeToggle 渐隐渐现
+    - slideDown/slideUp/slideToggle 下拉和卷起

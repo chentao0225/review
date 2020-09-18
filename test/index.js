@@ -468,3 +468,62 @@
 // })();
 // console.log(Array.prototype.hasPubProperty("push")); //false
 // console.log([].hasPubProperty("push")); //true
+
+// /**
+//  * debounce:函数防抖
+//  * @params
+//  *      fn:要执行的函数
+//  *      wait:间隔等待的时间
+//  *      immediate:在开始边界触发还是结束边界触发执行(true：在开始边界)
+//  * @return
+//  *      可被调用的函数
+//  */
+// function debounce(fn, wait, immediate) {
+//   let result = null,
+//     timeout = null;
+//   return function (...args) {
+//     let context = this,
+//       now = immediate && !timeout;
+//     clearTimeout(timeout);
+//     timeout = setTimeout(() => {
+//       timeout = null;
+//       if (!immediate) result = fn.call(context, ...args);
+//     }, wait);
+//     if (now) result = fn.call(context, ...args);
+//     return result;
+//   };
+// }
+
+/**
+ * throttle:函数节流
+ *  @params
+ *    fn:需要执行的函数
+ *    wait:设置间隔时间
+ *  @return
+ *    返回可被调用的函数
+ */
+
+// function throttle(fn, wait) {
+//   let timeout = null,
+//     result = null,
+//     previous = 0;
+//   return function (...args) {
+//     let now = new Date(),
+//       context = this;
+
+//     let remaining = wait - (now - previous);
+//     if (remaining <= 0) {
+//       clearTimeout(timeout);
+//       previous = now;
+//       timeout = null;
+//       result = fn.apply(context, args);
+//     } else if (!timeout) {
+//       timeout = setTimeout(() => {
+//         previous = new Date();
+//         timeout = null;
+//         result = fn.apply(context, args);
+//       }, remaining);
+//     }
+//     return result;
+//   };
+// }

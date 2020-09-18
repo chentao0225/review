@@ -120,9 +120,25 @@ console.log(str); //=>'a-b-c-d'
 
 `match`
 
-`localCompare`
+> 可以在执行一次的情况下，捕获到所有匹配的数据(前提：正则也得设置 g 才行)
 
-`trim` / `trimLeft` / `trimRight`
+`localeCompare`
+
+> 字符串比较  
+> 当 引用字符串 在 比较字符串 前面时返回 -1  
+> 当 引用字符串 在 比较字符串 后面时返回 1  
+> 相同位置时返回 0
+
+```javascript
+"a".localeCompare("b"); //-1
+```
+
+> `trim` / `trimLeft` / `trimRight`
+> 去除首尾空格、去除开头空格、去重尾部空格
+
+`String.fromCharCode`
+
+> 返回指定的 ASCII 码对应的字符串
 
 ### 格式化时间字符串
 
