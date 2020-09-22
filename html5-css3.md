@@ -67,6 +67,42 @@
 
 ## HTML5
 
+> HTML：超文本标记语言  
+> XHTML：更加严谨的 HTML  
+> HTML5：新一代 HTML 规范(适配移动端设备)
+
+- 新增的语义化标签
+
+  > 块级标签
+
+        - header 头部区域
+        - main 主体
+        - footer 尾部
+        - article 文章
+        - nav 导航
+        - figure 配图
+        - figcaption 配图说明
+        - aside 与主体内容无关(一般应用于侧边栏)
+        - section 普通区域
+
+  > 行内标签
+
+      - mark 文本标记
+      - time 日期标记
+
+  > 兼容处理(IE6~8)只需要导入一个 js:html5.min.js
+
+- 为啥要标签语义化
+  > 合理的标签做合适的事情=>有利于 SEO 搜索引擎优化推广
+  >
+  > - SEO:搜索引擎关键词排名推广
+  > - SEM:百度竞价
+  >
+  > 前后端技术分离的产品(数据绑定有前端 JS 或者模板引擎来渲染的),是不利于 SEO 优化的：因为基于 JS 动态绑定的数据，在网站的源代码中是看不到信息的
+
+> HTML5 新表单类型自带验证方式  
+> checkValidity()
+
 - Drag 事件
   > 可以把一个元素从当前位置拖拽到指定的容器中
   - dragstart
@@ -83,3 +119,16 @@
 
 - dataTransfer(DataTransfer):setData/getData/clearData
   > 设置的内容最后都会变成字符串 setData(类型标识,对应的值)
+
+### LESS
+
+> LESS 的编译常用的分为两种
+
+1. 开发环境下(开发项目的时候)
+   > 基于 less-xxx.min.js 进行编译：基于 link 把 less 文件导入，但是 rel 的值必须是 stylesheet/less,这样导入的 js 会找到这些 less 文件，把 less 编译为 css 即可
+2. 生产环境下(项目部署上线的时候)
+   > 需要把 less 编译成 css，然后让页面中导入的都是编译后的 css 需要基于 node 环境，并且基于 less 模块进行编译(命令操作方式)
+   >
+   > - 安装 node(安装 npm)
+   > - npm install less -g (MAC 电脑上设置 sudo 安装)
+   > - 找到对应的 less 文件目录,在目录中：lessc xxx.less xxx.css / -x(设置-x 是为了把代码进行压缩)

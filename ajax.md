@@ -132,3 +132,18 @@ xhr.open('GET','/list?name=sun&_='+Math.random());
 - xhr.send()
 - xhr.setRequestHeader()
   > 设置请求头：设置的请求头信息值不能是中文，可以使用 encodeURIComponent 编码
+
+**API**
+
+> Application Programing Interface 凡是可被别人调用，并且给予反馈结果的都可以被称之为 API 接口
+
+### Promise
+
+> ES6 语法规范中新增加的内置类，用来处理 JS 中异步编程，而我们所谓的 promise 设计模式，就是基于 promise 对异步操作进行管理
+
+**异步编程中的"回调地狱"**
+
+- AJAX 的串行
+  > 只有第一个请求成功才能执行第二个，第二个成功才能执行第三个...最后一个请求成功后拿到了每一次请求的所有数据
+- AJAX 的并行
+  > 三个请求可以同时发送，但是需要等到所有请求都成功才会做一件事

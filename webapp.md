@@ -98,5 +98,53 @@ window.addEventListener("resize", computedREM);
 
 > 现在真实项目中，主体响应式布局以 REM 为主，部分效果实现可以基于 FLEX 来做，需要样式微调增还是要基于@media 来完成的...
 
+```javascript
+//横屏
+let evt = "onorientationchange" in window ? "orientationchange" : "resize";
+function computed() {
+  let HTML = document.documentElement,
+    deviceW = HTML.clientWidth,
+    designW = 750, //设计图宽度
+    ratio = (deviceW / designW) * 100;
+  if (deviceW >= designW) ratio = 100;
+  HTML.style.fontSize = ratio + "px";
+}
+computed();
+window.addEventListener(evt, computed);
+```
+
 - DPR 适配
   > 屏幕像素密度比
+
+**移动端手机端联调**
+
+1. 在本地建立 web 服务器，让手机和电脑保持在同一个局域网中，这样在手机端就可以访问电脑中的项目了(pc 端关掉防火墙)
+2. 安装 Hbuilder,这样也可以联调
+3. 把项目部署到服务器(测试)上，然后进行测试
+
+**zepto 和 jquery 的区别?**
+
+> zepto 专门为移动端开发准备的，所以没有考虑 pc 端 IE 兼容的问题，所以 zepto 比 jquery 小的多；而且还有一方面，也导致 zepto 比 jquery 小：zepto 只实现了 jquery 中最常用的方法(例如 slideDown/slideUp/slideToggle 等快捷动画,在 zepto 中都没有):
+>
+> 1. JQ 中设置样式和实现动画的时候，不支持 CSS3 中某些样式属性的设置，例如：transform，但是 ZP 中支持了这样的处理
+> 2. ZP 中单独提供了一些移动端常用的事件方法:tap/singleTap/doubleTap/longTap/swipe/swipeLeft/swipeRight/swipeUp/swipeDown/pinchIn/pinchOut...，而这些 JQ 中都没有
+
+**移动端能用 click 事件吗?**
+
+> PC 端 click 是点击事件，移动端的 click 是单击事件(所以在移动端使用 click 会存在 300ms 延迟的问题，在第一次触发后，会等待 300ms，看是否有第二次触发，存在则为双击，不存在才是单击)
+
+**移动端常用的事件库**
+
+- zepto
+- fastclick:解决移动端 click 的 300ms 延迟问题的
+- hammerjs:国际通用的移动端手势事件库
+
+**移动端键盘事件和 PC 端的区别**
+
+> 移动端是虚拟键盘，所以对于 keydown/keyup/keypress 兼容很差，想实现类似的需求，需要用 input 事件完成(input 事件：移动端文本框内容输入事件)
+>
+> addEventListener('input',function(ev){})
+
+**touches vs changedTouches**
+
+> changedTouches:存储每根手指的操作信息(它是一个集合，对于 touch 单手指事假来说，集合中只有一项),changedTouches 存储的是手指发生改变操作的信息，但是最开始按下的时候和 touches 一样的,但是它可以在手指离开的事件中获取到手指离开瞬间的信息,而 touches 在离开的时候则没有，真实项目中一般都是 changedTouches

@@ -527,3 +527,123 @@
 //     return result;
 //   };
 // }
+
+// ~(function () {
+//   //处理字符串
+//   function handleString(str, val1, val2) {
+//     let index = str.indexOf(val1);
+//     return str.substring(0, index) + val2 + str.substring(index + val1.length);
+//   }
+//   function _replace(reg, callback) {
+//     let _this = this.substring(0),
+//       isGlobal = reg.global,
+//       arr = reg.exec(this);
+
+//     while (arr) {
+//       if (typeof callback === "function") {
+//         let res = callback.apply(null, arr);
+//         _this = handleString(_this, arr[0], res);
+//       }
+//       arr = reg.exec(this);
+//       if (!isGlobal) break;
+//     }
+//     return _this;
+//   }
+
+//   String.prototype._replace = _replace;
+// })();
+
+// let str = "{0}年{1}月{2}日",
+//   arr = ["2020", "09", "22"];
+// str = str._replace(/\{(\d)\}/g, function (content, group1) {
+//   return "@#" + arr[group1];
+// });
+// console.log(str); //=>@#2020年@#09月@#22日
+
+//自定义检测数据方法
+// let _obj = {
+//     isNumber: "Number",
+//     isBoolean: "Boolean",
+//     isString: "String",
+//     isNull: "Null",
+//     isUndefined: "Undefined",
+//     isSymbol: "Symbol",
+//     isObject: "Object",
+//     isArray: "Array",
+//     isRegExp: "RegExp",
+//     isDate: "Date",
+//     isFunction: "Function",
+//     isWindow: "Window",
+//   },
+//   _toString = _obj.toString,
+//   _type = {};
+
+// for (let key in _obj) {
+//   if (!_obj.hasOwnProperty(key)) break;
+//   _type[key] = (function () {
+//     let reg = new RegExp("^\\[object " + _obj[key] + "\\]$");
+//     return function anonymous(val) {
+//       return reg.test(_toString.call(val));
+//     };
+//   })();
+// }
+
+// function _each(obj, callback, context = window) {
+//   let isLikeArray =
+//     _type.isArray(obj) || ("length" in obj && _type.isNumber(obj.length));
+//   typeof callback !== "function" ? (callback = Function.prototype) : null;
+//   //数组或者类数组
+//   if (isLikeArray) {
+//     let arr = [...obj];
+//     for (let i = 0; i < arr.length; i++) {
+//       let item = arr[i],
+//         result = callback.call(context, item, i);
+//       if (result === false) break;
+//       if (typeof result === "undefined") continue;
+//       arr[i] = result;
+//     }
+//     return arr;
+//   }
+//   //对象的处理
+//   let _obj = { ...obj };
+//   for (let key in _obj) {
+//     if (!_obj.hasOwnProperty(key)) break;
+//     let value = _obj[key],
+//       result = callback.call(context, value, key);
+//     if (result === false) break;
+//     if (typeof result === "undefined") continue;
+//     _obj[key] = result;
+//   }
+//   return _obj;
+// }
+
+// let obj = {
+//   name: "sun",
+//   age: 22,
+// };
+// let obj2 = _each(
+//   obj,
+//   function (value, key) {
+//     console.log(this); //=>document
+//     console.log(value, key); //=> sun name 22 age
+//     if (key === "name") {
+//       return "soleil";
+//     }
+//   },
+//   document
+// );
+// console.log(obj, obj2);
+// //{name: "sun", age: 22} {name: "soleil", age: 22}
+
+// function func() {
+//   let arr = _each(arguments, (item, index) => {
+//     console.log(item, index); //=>10 0, 20 1, 30 2
+//     if (index >= 2) return false;
+//     return item * 10;
+//   });
+//   console.log(arguments, arr);
+//   //=>Arguments(4) [10, 20, 30, 40, callee: ƒ, Symbol(Symbol.iterator): ƒ]
+//   //=>[100, 200, 30, 40]
+// }
+
+// func(10, 20, 30, 40);

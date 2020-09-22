@@ -580,6 +580,7 @@ document.body.onclick = fn.bind(obj);
 `Object.assign`
 
 > 用于将所有可枚举属性的值从一个或多个源对象复制到目标对象。它将返回目标对象。
+
 ### 函数的防抖和节流
 
 - 函数防抖(debounce):不是某个事件触发就去执行函数，而是在指定的时间间隔内，执行一次，减少函数执行的次数
@@ -732,3 +733,155 @@ function animate(curEle, target = {}, duration = 1000, callback) {
 > 2.  后期把需要用到的信息都挂载到当前类的实例中，这样后面不管在哪个方法中用这些信息，只要能获取到实例，直接通过实例获取即可
 >
 > 3.  插件中需要使用的工具类方法，一般放到类的私有属性上(普通对象)
+
+### 回调函数
+
+> 把一个函数当做实参传递给另外一个函数，在另外一个函数执行的过程中，把传递过来的函数执行，这种机制就是回调函数
+>
+> 真实场景应用
+>
+> - AJAX 异步请求成功做什么事
+> - 浏览器内置的一些方法支持回调函数
+> - 插件组件封装中的钩子函数(生命周期函数)
+
+### 重写字符串内置方法 replace
+
+1. 正则在字符串中匹配几次，我们传递的回调函数就会被执行几次(前提：正则设置了 global 修饰符)
+2. 每一次执行回调函数，都把当前正则匹配的信息(既有大正则,也有小分组的)传递给回调函数
+3. 还要接受回调函数的返回值,返回的是啥内容，就要把当前字符串中正则匹配这一部分内容替换成啥
+
+```javascript
+~(function () {
+  //处理字符串
+  function handleString(str, val1, val2) {
+    let index = str.indexOf(val1);
+    return str.substring(0, index) + val2 + str.substring(index + val1.length);
+  }
+  function _replace(reg, callback) {
+    let _this = this.substring(0),
+      isGlobal = reg.global,
+      arr = reg.exec(this);
+
+    while (arr) {
+      //捕获到的结果是数组(执行回调函数，把捕获的结果传递给它);还要接受回调函数执行的返回值，用返回值替换字符串中当前正则匹配的内容
+      if (typeof callback === "function") {
+        let res = callback.apply(null, arr);
+        _this = handleString(_this, arr[0], res);
+      }
+      arr = reg.exec(this);
+      //不设置global的情况执行一次
+      if (!isGlobal) break;
+    }
+    return _this;
+  }
+
+  String.prototype._replace = _replace;
+})();
+
+let str = "{0}年{1}月{2}日",
+  arr = ["2020", "09", "22"];
+str = str._replace(/\{(\d)\}/g, function (content, group1) {
+  return "@#" + arr[group1];
+});
+console.log(str); //=>@#2020年@#09月@#22日
+```
+
+### 自定义 each 方法
+
+> 遍历数组、类数组、对象中的每一项  
+> @params  
+>  obj:需要迭代的数组、类数组、普通对象  
+>  callback:回调函数(每遍历数组中的某一项，就会把回调函数执行一次；而且需要把当前遍历的内容和索引[属性值和属性名]传给回调函数；接收回调函数的返回结果，如果是 false，则结束当前的循环，如果是其他值，让返回的值替换数组中的当前项，如果没有返回值，则什么都不处理...)  
+>  context:传递的第三个参数，可以改变回调函数中的 this 指向，不传默认是 window  
+> @return  
+>  返回一个新的数组或者对象(原来的数组或者对象不变)
+
+```javascript
+//自定义检测数据方法
+let _obj = {
+    isNumber: "Number",
+    isBoolean: "Boolean",
+    isString: "String",
+    isNull: "Null",
+    isUndefined: "Undefined",
+    isSymbol: "Symbol",
+    isObject: "Object",
+    isArray: "Array",
+    isRegExp: "RegExp",
+    isDate: "Date",
+    isFunction: "Function",
+    isWindow: "Window",
+  },
+  _toString = _obj.toString,
+  _type = {};
+
+for (let key in _obj) {
+  if (!_obj.hasOwnProperty(key)) break;
+  _type[key] = (function () {
+    let reg = new RegExp("^\\[object " + _obj[key] + "\\]$");
+    return function anonymous(val) {
+      return reg.test(_toString.call(val));
+    };
+  })();
+}
+
+function _each(obj, callback, context = window) {
+  let isLikeArray =
+    _type.isArray(obj) || ("length" in obj && _type.isNumber(obj.length));
+  typeof callback !== "function" ? (callback = Function.prototype) : null;
+  //数组或者类数组
+  if (isLikeArray) {
+    let arr = [...obj];
+    for (let i = 0; i < arr.length; i++) {
+      let item = arr[i],
+        result = callback.call(context, item, i);
+      if (result === false) break;
+      if (typeof result === "undefined") continue;
+      arr[i] = result;
+    }
+    return arr;
+  }
+  //对象的处理
+  let _obj = { ...obj };
+  for (let key in _obj) {
+    if (!_obj.hasOwnProperty(key)) break;
+    let value = _obj[key],
+      result = callback.call(context, value, key);
+    if (result === false) break;
+    if (typeof result === "undefined") continue;
+    _obj[key] = result;
+  }
+  return _obj;
+}
+
+let obj = {
+  name: "sun",
+  age: 22,
+};
+let obj2 = _each(
+  obj,
+  function (value, key) {
+    console.log(this); //=>document
+    console.log(value, key); //=> sun name 22 age
+    if (key === "name") {
+      return "soleil";
+    }
+  },
+  document
+);
+console.log(obj, obj2);
+//{name: "sun", age: 22} {name: "soleil", age: 22}
+
+function func() {
+  let arr = _each(arguments, (item, index) => {
+    console.log(item, index); //=>10 0, 20 1, 30 2
+    if (index >= 2) return false;
+    return item * 10;
+  });
+  console.log(arguments, arr);
+  //=>Arguments(4) [10, 20, 30, 40, callee: ƒ, Symbol(Symbol.iterator): ƒ]
+  //=>[100, 200, 30, 40]
+}
+
+func(10, 20, 30, 40);
+```
