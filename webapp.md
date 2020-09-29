@@ -1,5 +1,29 @@
 ## 移动端
 
+### Native App
+> ios和 android
+  - ios:object-c / swift
+  - android:java-native
+1. 直接运行在操作系统中的(能够直接操作设备中的软件或者硬件，而且性能不错)
+2. 不能跨平台，内容不能及时更新或者让用户及时的看到
+
+### Hybrid混合APP开发
+> 把webApp嵌入到Native App 的webview中  
+> 壳子：把操作软硬件和一些需要高体验或者支付分享等功能交给native app开发  
+> webview：就是不叫浏览器的浏览器，它也是基于webkit内核渲染页面的
+- H5和APP的通信
+1. JSBridge 
+  > 原理：向webview中注入所有需要H5后期调取APP的方法(类似于window的全局对象)
+2. 伪协议传输
+  > 只用于ios，因为安卓是开源系统，不安全
+
+- phoneGap/cordova/ionic/mui...就是让前端用来开发壳子的
+- react native / flutter / uni-app ... 基于js编写功能，最后生成Native App的代码
+
+### webApp
+>HTML5+CSS3+javascript
+1. H5运行在手机的浏览器中，而不是操作系统中(操作手机软硬件功能需要浏览器的支持，而且性能不好)
+2. 跨平台开发(手机端的浏览器一般都是webkit内核的)、强制自动更新的，把内容及时传达给用户
 ### 响应式开发
 
 > 让 H5 页面适配不同的设备

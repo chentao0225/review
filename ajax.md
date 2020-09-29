@@ -109,7 +109,6 @@ xhr.open('GET','/list?name=sun&_='+Math.random());
   - xhr.response 不限制类型
   - xhr.responseType
 - xhr.withCredentials
-
   > 默认 false，在跨域请求中是否允许携带证书(携带 cookie)
 
 - xhr.getResponseHeader([attr])
@@ -136,6 +135,173 @@ xhr.open('GET','/list?name=sun&_='+Math.random());
 **API**
 
 > Application Programing Interface 凡是可被别人调用，并且给予反馈结果的都可以被称之为 API 接口
+
+
+### 倒计时案例
+> new Date()获取客户端本地当前时间(不能拿它做重要数据，因为用户可以随意更改)  
+>倒计时抢购需要从服务器获取当前时间 AJAX  
+> 问题：时间差(从服务器把时间给客户端，到客户端获取到这个信息，中间经历的时间就是时间差)
+  - 从响应头获取时间(ajax异步)
+  - 基于head请求(只获取响应头信息)
+```javascript
+  let box = document.querySelector('.box')
+        let target = new Date('2020/9/29 18:36:59'),
+            now = null,
+            timer = null;
+        function queryDate(callback) {
+            let xhr = new XMLHttpRequest;
+            xhr.open('head', 'json/data.json', true)
+            xhr.onreadystatechange = function () {
+                if (!/^(2|3)\d{2}$/.test(xhr.status)) return
+                if (xhr.readyState === 2) {
+                    now = new Date(xhr.getResponseHeader('Date'))
+                    callback && callback()
+                }
+            }
+            xhr.send(null)
+        }
+
+        function computed() {
+            let curTime = target - now;
+            if (curTime <= 0) {
+                clearInterval(timer)
+                timer = null
+                box.innerHTML = '开抢~~'
+                return
+            }
+            let hours = Math.floor(curTime / (1000 * 60 * 60))
+            curTime -= hours * 60 * 60 * 1000;
+            let minutes = Math.floor(curTime / (60 * 1000))
+            curTime -= minutes * 60 * 1000;
+            let seconds = Math.floor(curTime / 1000)
+            box.innerHTML = `距离开抢还剩${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
+
+            now = new Date(now.getTime() + 1000)
+        }
+
+        queryDate(() => {
+            computed()
+            timer = setInterval(computed, 1000)
+        })
+```
+
+### 封装原生ajax库
+
+```javascript
+~function () {
+    /**
+     * 支持的配置项
+     *  url:请求地址
+     *  method:请求方式 get/post/head/put/delete/options
+     *  data:传递给服务器的信息：支持的格式string和json，
+     *      如果是object，需要处理为x-www-form-urlencoded格式；
+     *      get请求是把信息作为问号参数传递给服务器，   
+     *      post是放到请求主体传递给服务器
+     *  dataType:把服务器返回的结果处理成对应的格式 json/text/xml
+     *  anync:是否异步
+     *  cache:只对get请求有作用：设置为false，在url的末尾加随机数来清除缓存
+     *  timeout:超时时间
+     *  headers:设置请求头信息
+     *  success:成功执行的函数,把获取的结果、状态信息、XHR传递给它
+     *  error:失败执行的函数,把错误信息传递给它
+     * 
+     */
+    function ajax(options) {
+        return new init(options)
+    }
+    //默认参数
+    let defaults = {
+        url: '',
+        method: 'get',
+        data: null,
+        dataType: 'json',
+        async: true,
+        headers: {},
+        cache: true,
+        timeout: null,
+        success: null,
+        error: null
+    }
+    //检查是否为get系列请求
+    let regGET = /^(GET|DELETE|HEAD|OPTIONS)$/i
+    function init(options = {}) {
+        this.options = Object.assign(defaults, options)
+        this.xhr = null;
+        this.send()
+    }
+
+    ajax.prototype = {
+        constructor: ajax,
+        //发送ajax请求
+        send() {
+            let xhr = null,
+                { url, method, data, async, dataType, headers, cache, timeout, success, error } = this.options
+            this.xhr = xhr = new XMLHttpRequest;
+
+            //处理data:get系列把数据放到url末尾
+            data = this.handleData()
+            if (data !== null && regGET.test(method)) {
+                url += `${this.checkASK(url)}${data}`
+                data = null
+            }
+            //处理cache:是get系列并且cache是false需要清缓存
+            if (cache === false && regGET.test(method)) {
+                url += `${this.checkASK(url)}_=${Math.random()}`
+            }
+            xhr.open(method, url, async)
+            //超时处理
+            timeout !== null && typeof timeout === 'number' ? xhr.timeout = timeout : null
+            //处理请求头
+
+            if (Object.prototype.toString.call(headers) === '[object Object]') {
+                for (let key in headers) {
+                    if (!headers.hasOwnProperty(key)) break
+                    xhr.setRequestHeader(key, encodeURIComponent(headers[key]))
+                }
+            }
+
+            xhr.onreadystatechange = function () {
+                let { status, statusText, readyState: state, responseText, responseXML } = xhr
+                if (/^(2|3)\d{2}$/.test(status)) {
+                    if (state === 4) {
+                        switch (dataType.toUpperCase()) {
+                            case 'JSON':
+                                responseText = JSON.parse(responseText)
+                                break
+                            case 'XML':
+                                responseText = responseXML
+                        }
+                        typeof success === 'function' ? success(responseText, statusText, xhr) : null
+                    }
+                    return
+                }
+                typeof error === 'function' ? error(statusText, xhr) : null
+            }
+            xhr.send(data)
+        },
+        //处理data参数
+        handleData() {
+            let { data } = this.options
+            if (data === null || typeof data === 'string') return data
+
+            let str = ``
+            for (let key in data) {
+                if (!data.hasOwnProperty(key)) break
+                str += `&${key}=${data[key]}`
+            }
+            return str.substring(1)
+        },
+        //检查url是否存在问号
+        checkASK(url) {
+            return url.indexOf('?') === -1 ? '?' : '&'
+        }
+    }
+
+    init.prototype = ajax.prototype
+    window._ajax = ajax
+}()
+```
+
 
 ### Promise
 

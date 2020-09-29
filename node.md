@@ -132,3 +132,47 @@ let qs=require('qs')
 ```
 
 4. 导入模块是同步的(没导入完成，后面的事情是不处理的)；每一次导入模块都是把导入的模块中的 JS 代码从上到下执行一遍(只执行一遍)；
+
+### fs 内置模块
+
+> 提供大量的属性和方法，让 js 在 node 环境中执行的时候，可以操作服务器上的资源文件，也就是给予了 I/O 操作的能力
+
+- readdir / readdirSync
+  > 同步或者异步读取指定目录下的文件目录  
+  > fs.readdir([path],[callback(err,result)])  
+  > fs.readdir([path])
+- readFile / readFileSync
+  > 同步或者异步读取某一个文件中的内容  
+  > fs.readFileSync([path],[,encoding]):不设置编码格式，默认得到的是 Buffer 文件流(编码)格式的数据，设置 UTF8，得到的是字符串(例如：JSON 格式、HTML 或者 CSS 等格式)；但是对于富媒体资源(例如：图片、音视频等)我们读取和传输的过程中就是基于 Buffer 文件流格式操作的，所以不要设置 UTF8 读取  
+  > fs.readFile([path],[,encodeing],[callback(err,result)])
+- writeFile / writeFileSync
+  > 向某个文件中写入内容(如果文件不存在，它会默认创建一个文件再写入，而且写入方式是覆盖式写入"把之前文件中的内容全部覆盖")  
+  > 文件不存在可以，但是需要保证路径的正确性  
+  > fs.writeFileSync([path],[string/buffer content],[encoding])  
+  > 异步操作的方式可以监听其成功或者失败  
+  > fs.writeFile([path],[content],[encoding],[callback])
+- mkdir
+  > 创建目录  
+  > fs.mkdir([path],[callback])
+- rmdir
+  > 删除目录(但是一定要保证目录中不再有文件，否则不让删除)  
+  > fs.rmdir([path],[callback])
+- appendFile / appendFileSync
+  > 追加写入内容  
+  > fs.appendFile([path],[content],[ecoding])
+- copyFile / copyFileSync
+  > 把某个文件及里面的内容拷贝到新的目录中(替换型拷贝：原来目录中存在这个文件，新拷贝的会替换原来的)  
+  > fs.copyFile([curpath],[tarpath],[callback])
+- unlink
+
+  > 删除文件  
+  > fs.unlink([path],[callback])
+
+- `__dirname`
+  > 获取当前模块所在的绝对路径
+
+### path 内置模块
+
+- path.resolve()
+  > 获取当前 node 执行时所在的绝对目录(一般认为执行的目录就是项目根目录)  
+  > 如果传递了一个相对目录，也是以获取的绝对目录为依托，再查找对应的目录

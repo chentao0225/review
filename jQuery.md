@@ -92,7 +92,50 @@
 
 - AJAX 请求处理
 
-  > \$.ajax({url,method,async,dataType,success})
+  > \$.ajax([url],[options])  
+  > \$.ajax([options])  
+  > \$.get/post/getJSON/getScript()
+
+  - 配置项信息
+    - url：请求的API接口地址
+    - method：HTTP请求方式，默认GET
+    - data
+      >传递给服务器的信息，默认为null(可以是字符串，可以是对象，而且如果get系列请求，JQ会自动把信息拼接到URL的末尾，基于问号传参传递给服务器；如果是post请求，JQ会基于请求主体，把信息传递给服务器)
+    - dataType
+      >预设服务器返回的结果格式(服务器返回的一般都是JSON格式的字符串，如果我们设置了dataType,JQ会根据设置的类型，把服务器返回的结果处理为对应的格式)，支持的内容text/json/xml/html/script/jsonp(跨域)=>不影响服务器返回的结果，只是把服务器返回的结果进行二次处理
+    - async：是否为异步操作，默认为true，代表异步操作
+    - cache
+      >缓存处理，只对get系列请求有作用，默认是true不处理缓存，当设置为false后，JQ帮我们在url的末尾设置一个随机数
+    - contentType
+      >设置传递给服务器内容的格式类型默认是"application/x-www.form-urlencoded"  
+      >客户端传递给服务器信息的格式(类型一般都是字符串)  
+      >常用的:
+        - form-data表单数据：JSON格式'{"name":'soleil'}'
+        - x-www-form-urlencoded：name=soleil&lx=1
+        - raw：纯文本格式
+    - headers：设置请求头信息，是一个对象
+    - timeout：设置超时时间
+    - success：回调函数，当数据请求成功执行，方法中的参数就是从服务器获取的结果
+    - error：回调函数，数据请求失败执行，方法中的参数是错误信息
+    ```javascript
+      $.ajax({
+        url:"xxxx",
+        method:"post",
+        data:{
+          name:"xxx",
+          lx:"xx"
+        },
+        dataType:'json',
+        async:true,
+        cache:false,
+        headers:{},
+        success:(result,status,xhr)=>{
+          //xhr:jq处理过的ajax实例
+          console.log(result,status,xhr)
+        }
+      })
+
+    ```
 
 - 常用的工具方法
 

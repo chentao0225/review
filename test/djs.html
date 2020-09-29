@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倒计时</title>
+</head>
+
+<body>
+    <div class="box"></div>
+    <script>
+        let box = document.querySelector('.box')
+        let target = new Date('2020/9/29 18:36:59'),
+            now = null,
+            timer = null;
+        function queryDate(callback) {
+            let xhr = new XMLHttpRequest;
+            xhr.open('head', 'json/data.json', true)
+            xhr.onreadystatechange = function () {
+                if (!/^(2|3)\d{2}$/.test(xhr.status)) return
+                if (xhr.readyState === 2) {
+                    now = new Date(xhr.getResponseHeader('Date'))
+                    callback && callback()
+                }
+            }
+            xhr.send(null)
+        }
+
+        function computed() {
+            let curTime = target - now;
+            if (curTime <= 0) {
+                clearInterval(timer)
+                timer = null
+                box.innerHTML = '开抢~~'
+                return
+            }
+            let hours = Math.floor(curTime / (1000 * 60 * 60))
+            curTime -= hours * 60 * 60 * 1000;
+            let minutes = Math.floor(curTime / (60 * 1000))
+            curTime -= minutes * 60 * 1000;
+            let seconds = Math.floor(curTime / 1000)
+            box.innerHTML = `距离开抢还剩${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`
+
+            now = new Date(now.getTime() + 1000)
+        }
+
+        queryDate(() => {
+            computed()
+            timer = setInterval(computed, 1000)
+        })
+    </script>
+</body>
+
+</html>
