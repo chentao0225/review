@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>封装自己的axios库</title>
+  </head>
+
+  <body>
+    <script src="./js/axios.js"></script>
+    <script>
+      _ajax.defaults.baseURL =
+        "https://www.easy-mock.com/mock/5f733ee8a9e70a160307df94/example";
+      _ajax
+        .get("/list", {
+          params: {
+            // a: "123",
+          },
+          cache: false,
+        })
+        .then((result) => {
+          console.log(result);
+        });
+      _ajax
+        .post("/upload", {
+          a: 1,
+        })
+        .then((res) => {
+          console.log(res);
+        });
+    </script>
+  </body>
+</html>
